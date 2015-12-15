@@ -1,0 +1,24 @@
+
+# drivers
+psycopg2==2.6
+redis==2.10.3
+
+# django
+Django==1.8
+django-celery==3.1
+
+# celery
+celery==3.1.19
+kombu==3.0.30
+billiard==3.3.0.18
+flower==0.8.3
+pyinotify==0.9.6
+eventlet==0.17.4
+gevent==1.1rc2
+
+# ssh
+Paramiko==1.16
+pycrypto==2.6.1
+ecdsa==0.13
+
+

@@ -1,0 +1,32 @@
+
+<html>
+  <head>
+    <title>SSH bruteforcing</title>
+  </head>
+  <body>
+    <h1>SSH bruteforcing</h1>
+    <form action="{% url 'site.home' %}" method="POST">
+      {% csrf_token %}
+      {{ form }}
+      <br/><br/>
+      <button type="submit">Bruteforce</button>
+    </form>
+
+    <hr/>
+
+    <table>
+      <tr>
+	<th>Hostname</th>
+	<th>Username</th>
+	<th>Password</th>
+      </tr>
+      {% for credential in credentials %}
+      <tr>
+	<td>{{ credential.hostname }}</td>
+	<td>{{ credential.username }}</td>
+	<td>{{ credential.password }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+
+
+#### CODE BASE ####
+app:
+  build: .
+  dockerfile: Dockerfile.source-code
+  links:
+    - postgresql
+    - broker
+  volumes:
+    - .:/usr/src/app
+  ports:
+    - "8000:8000"
+  environment:
+    - PYTHONUNBUFFERED=0
+  command: python -u manage.py runserver 0.0.0.0:8000
+
+worker:
+  build: .
+  dockerfile: Dockerfile.source-code
+  links:
+    - postgresql
+    - broker
+  volumes:
+    - .:/usr/src/app
+  environment:
+    - PYTHONUNBUFFERED=0
+  command: ./start-workers.sh
+
+
+#### DATABASE ####
+postgresql:
+  image: postgres:9.4
+  ports:
+    - "5432:5432"
+  volumes:
+    - ./schema:/docker-entrypoint-initdb.d
+  environment:
+    - POSTGRES_USER=scanner
+    - POSTGRES_PASSWORD=scanner
+
+
+#### SERVICES ####
+#broker:
+#  image: tutum-docker-rabbitmq
+#  ports:
+#    - "5672:5672"
+#    - "15672:15672"
+#  environment:
+#    - RABBIT_NODE_PORT=5672
+#    - RABBITMQ_PASS=scanner
+#    - RABBITMQ_USER=scanner
+
+broker:
+  image: redis:3.0
+  ports:
+    - "6379:6379"
+
+flower:
+  build: .
+  dockerfile: Dockerfile.flower
+  ports:
+    - "5555:5555"
+  links:
+    - broker
+  environment:
+    - CELERY_BROKER_URL="redis://broker:6379/0"
+  command:
+    - "--broker_api=redis://broker:6379/0"
+    - "--broker=redis://broker:6379/0"
+    - "--url_prefix=/"

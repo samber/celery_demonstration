@@ -1,0 +1,5 @@
+
+FROM iserko/docker-celery-flower
+MAINTAINER Samuel BERTHE <samuel.berthe@wfp.org>
+
+RUN pip install redis hiredis

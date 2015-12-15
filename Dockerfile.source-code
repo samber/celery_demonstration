@@ -1,0 +1,26 @@
+# based on django:python3-onbuild
+
+FROM python:3.4
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+RUN apt-get update && apt-get install -y \
+		gcc \
+		gettext \
+		postgresql-client libpq-dev \
+		sqlite3 \
+		python-dev \
+		python-setuptools \
+	--no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+RUN pip install -U Celery
+
+EXPOSE 8000
+
+COPY requirements.txt /usr/src/app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# mount in a volume
+#COPY . /usr/src/app
+
